@@ -1,0 +1,63 @@
+# IDEA Rider
+.idea/
+
+# Visual Studio user specific files
+.vs/
+/.vsconfig
+
+# Compiled object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled headers
+*.gch
+*.pch
+
+# Compiled dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Compiled static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+*.ipa
+
+# Generated project files
+*.xcodeproj
+*.xcworkspace
+*.sln
+*.suo
+*.opensdf
+*.sdf
+*.VC.db
+*.VC.opendb
+
+# Unreal generated files
+Binaries/
+Intermediate/
+Saved/
+DerivedDataCache/
+
+# Builds
+Build/*
+!Build/*/
+Build/*/**
+!Build/*/PakBlacklist*.txt
+!Build/**/*.ico
+
+# Built data for maps
+*_BuiltData.uasset
+
+# Misc temp/log files
+*.tmp
+*.log
