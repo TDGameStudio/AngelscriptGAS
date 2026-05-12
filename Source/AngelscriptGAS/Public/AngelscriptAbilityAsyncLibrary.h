@@ -22,6 +22,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (TargetActor == nullptr)
+		{
+			return nullptr;
+		}
+
 		return UAbilityAsync_WaitAttributeChanged::WaitForAttributeChanged(TargetActor, Attribute, bTriggerOnce);
 	}
 
@@ -32,6 +37,11 @@ public:
 		const bool bTriggerOnce = false,
 		const bool bMatchExact = true)
 	{
+		if (TargetActor == nullptr)
+		{
+			return nullptr;
+		}
+
 		return UAbilityAsync_WaitGameplayEvent::WaitGameplayEventToActor(TargetActor, Tag, bTriggerOnce, bMatchExact);
 	}
 
@@ -42,6 +52,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (TargetActor == nullptr)
+		{
+			return nullptr;
+		}
+
 		return UAbilityAsync_WaitGameplayTagAdded::WaitGameplayTagAddToActor(TargetActor, Tag, bTriggerOnce);
 	}
 
@@ -52,6 +67,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (TargetActor == nullptr)
+		{
+			return nullptr;
+		}
+
 		return UAbilityAsync_WaitGameplayTagRemoved::WaitGameplayTagRemoveFromActor(TargetActor, Tag, bTriggerOnce);
 	}
 
@@ -63,6 +83,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (TargetActor == nullptr)
+		{
+			return nullptr;
+		}
+
 		return UAbilityAsync_WaitGameplayTagQuery::WaitGameplayTagQueryOnActor(TargetActor, Query, TriggerCondition, bTriggerOnce);
 	}
 };

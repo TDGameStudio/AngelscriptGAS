@@ -174,7 +174,7 @@ bool UAngelscriptAttributeSet::TryGetAttributeBaseValue(FName AttributeName, flo
 FGameplayAttribute UAngelscriptAttributeSet::GetGameplayAttribute(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName)
 {
 	FGameplayAttribute Attribute;
-	ensureMsgf(TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute), TEXT("Attribute access failed! Make sure attribute class >%s< and attribute name >%s< are valid!"), *AttributeSetClass->GetName(), *AttributeName.ToString());
+	ensureMsgf(TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute), TEXT("Attribute access failed! Make sure attribute class >%s< and attribute name >%s< are valid!"), *GetNameSafe(AttributeSetClass.Get()), *AttributeName.ToString());
 	return Attribute;
 }
 

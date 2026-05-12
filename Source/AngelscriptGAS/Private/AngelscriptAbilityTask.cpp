@@ -1,4 +1,5 @@
 #include "AngelscriptAbilityTask.h"
+#include "AbilitySystemLog.h"
 
 UAngelscriptAbilityTask::UAngelscriptAbilityTask(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer)
@@ -145,8 +146,17 @@ void UAngelscriptAbilityTask::BP_ClearWaitingOnAvatar()
 
 UAngelscriptAbilityTask* UAngelscriptAbilityTask::CreateAbilityTask(TSubclassOf<UAngelscriptAbilityTask> TaskType, UGameplayAbility* ThisAbility, FName NewInstanceName)
 {
-	ensureMsgf(TaskType.Get(), TEXT("Must use valid task type!"));
-	ensureMsgf(ThisAbility, TEXT("Must have source ability!"));
+	if (!TaskType)
+	{
+		ABILITY_LOG(Warning, TEXT("Please provide a valid TaskType to CreateAbilityTask()"));
+		return nullptr;
+	}
+
+	if (!ThisAbility)
+	{
+		ABILITY_LOG(Warning, TEXT("Please provide a valid ThisAbility to CreateAbilityTask()"));
+		return nullptr;
+	}
 
 	UAngelscriptAbilityTask* NewTask = NewObject<UAngelscriptAbilityTask>(GetTransientPackage(), TaskType.Get());
 	ensureMsgf(NewTask, TEXT("Could not create task!"));

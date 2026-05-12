@@ -3,6 +3,43 @@
 #include "AbilitySystemLog.h"
 #include "GameplayCueManager.h"
 
+namespace
+{
+bool ValidateAttributeChangedCallbackInput(
+	const FGameplayAttribute& Attribute,
+	UObject* CallbackObject,
+	FName CallbackFunctionName_FAngelscriptAttributeChangedData)
+{
+	if (!Attribute.IsValid())
+	{
+		ABILITY_LOG(Warning, TEXT("Must provide valid attribute data"));
+		return false;
+	}
+
+	if (CallbackObject == nullptr)
+	{
+		ABILITY_LOG(Warning, TEXT("Must provide valid callback object"));
+		return false;
+	}
+
+	if (CallbackFunctionName_FAngelscriptAttributeChangedData == NAME_None)
+	{
+		ABILITY_LOG(Warning, TEXT("Must provide valid callback method name"));
+		return false;
+	}
+
+	if (CallbackObject->FindFunction(CallbackFunctionName_FAngelscriptAttributeChangedData) == nullptr)
+	{
+		ABILITY_LOG(Warning, TEXT("Could not find callback function %s on %s"),
+			*CallbackFunctionName_FAngelscriptAttributeChangedData.ToString(),
+			*GetNameSafe(CallbackObject));
+		return false;
+	}
+
+	return true;
+}
+}
+
 UAngelscriptAbilitySystemComponent::UAngelscriptAbilitySystemComponent()
 {
 	ActiveGameplayEffects.OnActiveGameplayEffectRemovedDelegate.AddUObject(this, &UAngelscriptAbilitySystemComponent::OnGameplayEffectEnded);
@@ -62,6 +99,12 @@ void UAngelscriptAbilitySystemComponent::OnAttributeSetRegistered(UObject* InObj
 
 UAngelscriptAttributeSet* UAngelscriptAbilitySystemComponent::RegisterAttributeSet(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass)
 {
+	if (!AttributeSetClass)
+	{
+		ABILITY_LOG(Warning, TEXT("Please provide a valid AttributeSetClass to RegisterAttributeSet()"));
+		return nullptr;
+	}
+
 	for (UAttributeSet* AttributeSet : GetSpawnedAttributes())
 	{
 		if (AttributeSet->IsA(AttributeSetClass))
@@ -84,10 +127,9 @@ UAngelscriptAttributeSet* UAngelscriptAbilitySystemComponent::RegisterAttributeS
 
 void UAngelscriptAbilitySystemComponent::RegisterAttributeChangedCallback(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName, UObject* CallbackObject, FName CallbackFunctionName_FAngelscriptAttributeChangedData)
 {
-	const FGameplayAttribute Attribute = UAngelscriptAttributeSet::GetGameplayAttribute(AttributeSetClass, AttributeName);
-	if (ensureMsgf(Attribute.IsValid(), TEXT("Must provide valid attribute data"))
-		&& ensureMsgf(CallbackObject, TEXT("Must provide valid callback object"))
-		&& ensureMsgf(CallbackFunctionName_FAngelscriptAttributeChangedData != NAME_None, TEXT("Must provide valid callback method name")))
+	FGameplayAttribute Attribute;
+	UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute);
+	if (ValidateAttributeChangedCallbackInput(Attribute, CallbackObject, CallbackFunctionName_FAngelscriptAttributeChangedData))
 	{
 		FOnGameplayAttributeValueChange& AttributeChangeDelegate = ActiveGameplayEffects.GetGameplayAttributeValueChangeDelegate(Attribute);
 		if (!AttributeChangeDelegate.IsBoundToObject(CallbackObject))
@@ -99,10 +141,9 @@ void UAngelscriptAbilitySystemComponent::RegisterAttributeChangedCallback(TSubcl
 
 void UAngelscriptAbilitySystemComponent::GetAndRegisterAttributeChangedCallback(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName, UObject* CallbackObject, FName CallbackFunctionName_FAngelscriptAttributeChangedData, float& OutCurrentValue)
 {
-	const FGameplayAttribute Attribute = UAngelscriptAttributeSet::GetGameplayAttribute(AttributeSetClass, AttributeName);
-	if (ensureMsgf(Attribute.IsValid(), TEXT("Must provide valid attribute data"))
-		&& ensureMsgf(CallbackObject, TEXT("Must provide valid callback object"))
-		&& ensureMsgf(CallbackFunctionName_FAngelscriptAttributeChangedData != NAME_None, TEXT("Must provide valid callback method name")))
+	FGameplayAttribute Attribute;
+	UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute);
+	if (ValidateAttributeChangedCallbackInput(Attribute, CallbackObject, CallbackFunctionName_FAngelscriptAttributeChangedData))
 	{
 		FOnGameplayAttributeValueChange& AttributeChangeDelegate = ActiveGameplayEffects.GetGameplayAttributeValueChangeDelegate(Attribute);
 		if (!AttributeChangeDelegate.IsBoundToObject(CallbackObject))
@@ -185,12 +226,9 @@ float UAngelscriptAbilitySystemComponent::GetAttributeBaseValue(TSubclassOf<UAng
 
 bool UAngelscriptAbilitySystemComponent::TrySetAttributeBaseValue(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName, float NewBaseValue)
 {
-	FGameplayAttribute Attribute;
 	const UAttributeSet* AttributeSet = GetAttributeSubobject(AttributeSetClass);
-	if (AttributeSet && ensureMsgf(
-		UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute), 
-		TEXT("Attribute <%s> doesn't exist inside the attribute set <%s>"), *AttributeName.ToString(), *AttributeSetClass->GetName()
-	))
+	FGameplayAttribute Attribute;
+	if (AttributeSet && UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute))
 	{
 		SetNumericAttributeBase(Attribute, NewBaseValue);
 		return true;
@@ -201,12 +239,9 @@ bool UAngelscriptAbilitySystemComponent::TrySetAttributeBaseValue(TSubclassOf<UA
 
 bool UAngelscriptAbilitySystemComponent::TryGetAttributeCurrentValue(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName, float& OutCurrentValue) const
 {
-	FGameplayAttribute Attribute;
 	const UAttributeSet* AttributeSet = GetAttributeSubobject(AttributeSetClass);
-	if (AttributeSet && ensureMsgf(
-		UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute),
-		TEXT("Attribute <%s> doesn't exist inside the attribute set <%s>"), *AttributeName.ToString(), *AttributeSetClass->GetName()
-	))
+	FGameplayAttribute Attribute;
+	if (AttributeSet && UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute))
 	{
 		OutCurrentValue = Attribute.GetNumericValue(AttributeSet);
 		return true;
@@ -217,12 +252,9 @@ bool UAngelscriptAbilitySystemComponent::TryGetAttributeCurrentValue(TSubclassOf
 
 bool UAngelscriptAbilitySystemComponent::TryGetAttributeBaseValue(TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass, FName AttributeName, float& OutBaseValue) const
 {
-	FGameplayAttribute Attribute;
 	const UAttributeSet* AttributeSet = GetAttributeSubobject(AttributeSetClass);
-	if (AttributeSet && ensureMsgf(
-		UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute),
-		TEXT("Attribute <%s> doesn't exist inside the attribute set <%s>"), *AttributeName.ToString(), *AttributeSetClass->GetName()
-	))
+	FGameplayAttribute Attribute;
+	if (AttributeSet && UAngelscriptAttributeSet::TryGetGameplayAttribute(AttributeSetClass, AttributeName, Attribute))
 	{
 		OutBaseValue = GetNumericAttributeBase(Attribute);
 		return true;
@@ -345,44 +377,40 @@ bool UAngelscriptAbilitySystemComponent::TryActivateAbilitySpec(const FGameplayA
 
 FGameplayAbilitySpecHandle UAngelscriptAbilitySystemComponent::GiveAbility_Internal(TSubclassOf<UGameplayAbility> InAbilityClass, int32 Level, int32 OptionalInputID, UObject* OptionalSourceObject)
 {
-	ensureMsgf(InAbilityClass != nullptr, TEXT("Please provide a valid InAbilityClass to GiveAbility()"));
-
-	// Don't allow crashing
-	if (InAbilityClass)
+	if (!InAbilityClass)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(InAbilityClass, Level);
-		AbilitySpec.SourceObject = OptionalSourceObject;
-		AbilitySpec.InputID = OptionalInputID;
-		return Super::GiveAbility(AbilitySpec);
+		ABILITY_LOG(Warning, TEXT("Please provide a valid InAbilityClass to GiveAbility()"));
+		return FGameplayAbilitySpecHandle();
 	}
 
-	return FGameplayAbilitySpecHandle();
+	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(InAbilityClass, Level);
+	AbilitySpec.SourceObject = OptionalSourceObject;
+	AbilitySpec.InputID = OptionalInputID;
+	return Super::GiveAbility(AbilitySpec);
 }
 FGameplayAbilitySpecHandle UAngelscriptAbilitySystemComponent::GiveAbilityAndActivateOnce_Internal(TSubclassOf<UGameplayAbility> InAbilityClass, int32 Level, int32 OptionalInputID, UObject* OptionalSourceObject)
 {
-	ensureMsgf(InAbilityClass != nullptr, TEXT("Please provide a valid InAbilityClass to GiveAbilityAndActivateOnce()"));
-
-	// Don't allow crashing
-	if (InAbilityClass)
+	if (!InAbilityClass)
 	{
-		FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(InAbilityClass, Level);
-		AbilitySpec.SourceObject = OptionalSourceObject;
-		AbilitySpec.InputID = OptionalInputID;
-		return Super::GiveAbilityAndActivateOnce(AbilitySpec);
+		ABILITY_LOG(Warning, TEXT("Please provide a valid InAbilityClass to GiveAbilityAndActivateOnce()"));
+		return FGameplayAbilitySpecHandle();
 	}
 
-	return FGameplayAbilitySpecHandle();
+	FGameplayAbilitySpec AbilitySpec = FGameplayAbilitySpec(InAbilityClass, Level);
+	AbilitySpec.SourceObject = OptionalSourceObject;
+	AbilitySpec.InputID = OptionalInputID;
+	return Super::GiveAbilityAndActivateOnce(AbilitySpec);
 }
 
 void UAngelscriptAbilitySystemComponent::CancelAbility(TSubclassOf<UGameplayAbility> InAbilityClass)
 {
-	ensureMsgf(InAbilityClass != nullptr, TEXT("Please provide a valid InAbilityClass to CancelAbility()"));
-
-	// Don't allow crashing
-	if (InAbilityClass)
+	if (!InAbilityClass)
 	{
-		Super::CancelAbility(InAbilityClass.GetDefaultObject());
+		ABILITY_LOG(Warning, TEXT("Please provide a valid InAbilityClass to CancelAbility()"));
+		return;
 	}
+
+	Super::CancelAbility(InAbilityClass.GetDefaultObject());
 }
 
 bool UAngelscriptAbilitySystemComponent::IsAbilityActive(TSubclassOf<UGameplayAbility> InAbilityClass) const
@@ -455,17 +483,16 @@ bool UAngelscriptAbilitySystemComponent::HasAnyGameplayTags(const FGameplayTagCo
 
 bool UAngelscriptAbilitySystemComponent::HasAbility(TSubclassOf<UGameplayAbility> InAbilityClass) const
 {
-	ensureMsgf(InAbilityClass != nullptr, TEXT("Please provide a valid InAbilityClass to HasAbility()"));
-
-	if (InAbilityClass)
+	if (!InAbilityClass)
 	{
-		const UGameplayAbility* Ability = InAbilityClass.GetDefaultObject();
-
-		return ActivatableAbilities.Items.ContainsByPredicate(
-			[Ability](const FGameplayAbilitySpec& Spec) -> bool { return Spec.Ability == Ability; });
+		ABILITY_LOG(Warning, TEXT("Please provide a valid InAbilityClass to HasAbility()"));
+		return false;
 	}
 
-	return false;
+	const UGameplayAbility* Ability = InAbilityClass.GetDefaultObject();
+
+	return ActivatableAbilities.Items.ContainsByPredicate(
+		[Ability](const FGameplayAbilitySpec& Spec) -> bool { return Spec.Ability == Ability; });
 }
 
 void UAngelscriptAbilitySystemComponent::InitAbilityActorInfo(AActor* InOwnerActor, AActor* InAvatarActor)

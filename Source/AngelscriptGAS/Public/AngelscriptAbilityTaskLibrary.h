@@ -46,6 +46,12 @@ class ANGELSCRIPTGAS_API UAngelscriptAbilityTaskLibrary : public UBlueprintFunct
 {
 	GENERATED_BODY()
 
+private:
+	static bool CanCreateAbilityTask(const UGameplayAbility* OwningAbility)
+	{
+		return OwningAbility != nullptr;
+	}
+
 public:
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
@@ -63,6 +69,11 @@ public:
 		const bool bEnableGravity
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_ApplyRootMotionConstantForce::ApplyRootMotionConstantForce(
 			OwningAbility, 
 			TaskInstanceName, 
@@ -95,6 +106,11 @@ public:
 		UCurveFloat* TimeMappingCurve
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_ApplyRootMotionJumpForce::ApplyRootMotionJumpForce(
 			OwningAbility,
 			TaskInstanceName,
@@ -133,6 +149,11 @@ public:
 		const bool bDisableDestinationReachedInterrupt
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_ApplyRootMotionMoveToActorForce::ApplyRootMotionMoveToActorForce(
 			OwningAbility,
 			TaskInstanceName,
@@ -177,6 +198,11 @@ public:
 		const bool bDisableDestinationReachedInterrupt
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_ApplyRootMotionMoveToActorForce::ApplyRootMotionMoveToTargetDataActorForce(
 			OwningAbility,
 			TaskInstanceName,
@@ -215,6 +241,11 @@ public:
 		const float ClampVelocityOnFinish
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		 return UAbilityTask_ApplyRootMotionMoveToForce::ApplyRootMotionMoveToForce(
 			OwningAbility,
 			TaskInstanceName,
@@ -251,6 +282,11 @@ public:
 		const float ClampVelocityOnFinish
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_ApplyRootMotionRadialForce::ApplyRootMotionRadialForce(
 			OwningAbility,
 			TaskInstanceName,
@@ -282,6 +318,11 @@ public:
 		UCurveVector* VectorInterpolationCurve = nullptr
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_MoveToLocation::MoveToLocation(
 			OwningAbility,
 			TaskInstanceName,
@@ -295,6 +336,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_NetworkSyncPoint* WaitNetSync(UGameplayAbility* OwningAbility, const EAbilityTaskNetSyncType SyncType)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_NetworkSyncPoint::WaitNetSync(OwningAbility, SyncType);
 	}
 
@@ -310,6 +356,11 @@ public:
 		const float StartTimeSeconds = 0.f
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(
 			OwningAbility,
 			TaskInstanceName,
@@ -325,18 +376,33 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_Repeat* RepeatAction(UGameplayAbility* OwningAbility, const float TimeBetweenActions, const int32 TotalActionCount)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_Repeat::RepeatAction(OwningAbility, TimeBetweenActions, TotalActionCount);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_SpawnActor* SpawnActor(UGameplayAbility* OwningAbility, const FGameplayAbilityTargetDataHandle& TargetData, const TSubclassOf<AActor> Class)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_SpawnActor::SpawnActor(OwningAbility, TargetData, Class);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_StartAbilityState* StartAbilityState(UGameplayAbility* OwningAbility, const FName StateName, const bool bEndCurrentState = true)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_StartAbilityState::StartAbilityState(OwningAbility, StateName, bEndCurrentState);
 	}
 
@@ -348,6 +414,11 @@ public:
 		const float Duration = -1.0f
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_VisualizeTargeting::VisualizeTargeting(
 			OwningAbility,
 			TargetClass,
@@ -364,6 +435,11 @@ public:
 		const float Duration = -1.0f
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_VisualizeTargeting::VisualizeTargetingUsingActor(
 			OwningAbility,
 			TargetActor,
@@ -381,6 +457,11 @@ public:
 		const bool bTriggerOnce = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAbilityActivate::WaitForAbilityActivate(
 			OwningAbility,
 			WithTag,
@@ -398,6 +479,11 @@ public:
 		const bool bTriggerOnce = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAbilityActivate::WaitForAbilityActivate_Query(
 			OwningAbility,
 			Query,
@@ -414,6 +500,11 @@ public:
 		const bool bTriggerOnce = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAbilityActivate::WaitForAbilityActivateWithTagRequirements(
 			OwningAbility,
 			TagRequirements,
@@ -430,6 +521,11 @@ public:
 		const bool bTriggerOnce = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAbilityCommit::WaitForAbilityCommit(
 			OwningAbility,
 			WithTag,
@@ -445,6 +541,11 @@ public:
 		const bool bTriggerOnce = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAbilityCommit::WaitForAbilityCommit_Query(
 			OwningAbility,
 			Query,
@@ -462,6 +563,11 @@ public:
 		AActor* ExternalOwner = nullptr
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAttributeChange::WaitForAttributeChange(
 			OwningAbility,
 			Attribute,
@@ -484,6 +590,11 @@ public:
 		AActor* ExternalOwner = nullptr
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAttributeChange::WaitForAttributeChangeWithComparison(
 			OwningAbility,
 			Attribute,
@@ -507,6 +618,11 @@ public:
 		AActor* ExternalOwner = nullptr
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAttributeChangeRatioThreshold::WaitForAttributeChangeRatioThreshold(
 			OwningAbility,
 			AttributeNumerator,
@@ -528,6 +644,11 @@ public:
 		AActor* ExternalOwner = nullptr
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitAttributeChangeThreshold::WaitForAttributeChangeThreshold(
 			OwningAbility,
 			Attribute,
@@ -541,24 +662,44 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitCancel* WaitForCancelInput(UGameplayAbility* OwningAbility)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitCancel::WaitCancel(OwningAbility);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitConfirm* WaitForConfirmInput(UGameplayAbility* OwningAbility)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitConfirm::WaitConfirm(OwningAbility);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitConfirmCancel* WaitConfirmCancel(UGameplayAbility* OwningAbility)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitConfirmCancel::WaitConfirmCancel(OwningAbility);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitDelay* WaitDelay(UGameplayAbility* OwningAbility, const float Time)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitDelay::WaitDelay(OwningAbility, Time);
 	}
 
@@ -573,6 +714,11 @@ public:
 		const bool bListenForPeriodicEffect = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectApplied_Self::WaitGameplayEffectAppliedToSelf(
 			OwningAbility,
 			Filter,
@@ -597,6 +743,11 @@ public:
 		const bool bListenForPeriodicEffect = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectApplied_Self::WaitGameplayEffectAppliedToSelf_Query(
 			OwningAbility,
 			Filter,
@@ -621,6 +772,11 @@ public:
 		const bool bListenForPeriodicEffect = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectApplied_Target::WaitGameplayEffectAppliedToTarget(
 			OwningAbility,
 			Filter,
@@ -645,6 +801,11 @@ public:
 		const bool bListenForPeriodicEffect = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectApplied_Target::WaitGameplayEffectAppliedToTarget_Query(
 			OwningAbility,
 			Filter,
@@ -667,6 +828,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectBlockedImmunity::WaitGameplayEffectBlockedByImmunity(
 			OwningAbility,
 			SourceTagRequirements,
@@ -679,12 +845,22 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitGameplayEffectRemoved* WaitForGameplayEffectRemoved(UGameplayAbility* OwningAbility, const FActiveGameplayEffectHandle Handle)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectRemoved::WaitForGameplayEffectRemoved(OwningAbility, Handle);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitGameplayEffectStackChange* WaitForGameplayEffectStackChange(UGameplayAbility* OwningAbility, const FActiveGameplayEffectHandle Handle)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEffectStackChange::WaitForGameplayEffectStackChange(OwningAbility, Handle);
 	}
 
@@ -697,6 +873,11 @@ public:
 		const bool bMatchExact = true
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(
 			OwningAbility,
 			Tag,
@@ -714,6 +895,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayTagAdded::WaitGameplayTagAdd(
 			OwningAbility,
 			Tag,
@@ -730,6 +916,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayTagRemoved::WaitGameplayTagRemove(
 			OwningAbility,
 			Tag,
@@ -747,6 +938,11 @@ public:
 		const bool bTriggerOnce = false
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitGameplayTagQuery::WaitGameplayTagQuery(
 			OwningAbility,
 			Query,
@@ -759,24 +955,44 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitInputPress* WaitInputPress(UGameplayAbility* OwningAbility, const bool bTestAlreadyPressed = false)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitInputPress::WaitInputPress(OwningAbility, bTestAlreadyPressed);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitInputRelease* WaitInputRelease(UGameplayAbility* OwningAbility, const bool bTestAlreadyReleased = false)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitInputRelease::WaitInputRelease(OwningAbility, bTestAlreadyReleased);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitMovementModeChange* WaitMovementModeChange(UGameplayAbility* OwningAbility, const EMovementMode NewMode)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitMovementModeChange::CreateWaitMovementModeChange(OwningAbility, NewMode);
 	}
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitOverlap* WaitForOverlap(UGameplayAbility* OwningAbility)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitOverlap::WaitForOverlap(OwningAbility);
 	}
 
@@ -788,6 +1004,11 @@ public:
 		const TSubclassOf<AGameplayAbilityTargetActor> TargetClass
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitTargetData::WaitTargetData(
 			OwningAbility,
 			TaskInstanceName,
@@ -804,6 +1025,11 @@ public:
 		AGameplayAbilityTargetActor* TargetActor
 	)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitTargetData::WaitTargetDataUsingActor(
 			OwningAbility,
 			TaskInstanceName,
@@ -815,6 +1041,11 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks")
 	static UAbilityTask_WaitVelocityChange* WaitVelocityChange(UGameplayAbility* OwningAbility, const FVector& Direction, const float MinimumMagnitude)
 	{
+		if (!CanCreateAbilityTask(OwningAbility))
+		{
+			return nullptr;
+		}
+
 		return UAbilityTask_WaitVelocityChange::CreateWaitVelocityChange(OwningAbility, Direction, MinimumMagnitude);
 	}
 };
