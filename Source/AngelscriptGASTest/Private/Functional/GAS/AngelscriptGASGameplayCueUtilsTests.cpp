@@ -28,6 +28,19 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASGameplayCueUtilsTests,
 {
 	FActorTestSpawner Spawner;
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(AddLocalGameplayCueDoesNotCrashWithNullActor)
 	{
 		FGameplayCueParameters Params;
@@ -72,7 +85,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASGameplayCueUtilsTests,
 	TEST_METHOD(CaptureGameplayAttributeWithSnapshotSetsFlag)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("CueUtilsSnapshot"));
@@ -105,7 +118,7 @@ class UTestSnapshotAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(CaptureGameplayAttributeWithoutSnapshotClearsFlag)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("CueUtilsNoSnapshot"));
@@ -138,7 +151,7 @@ class UTestNoSnapshotAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MakeGameplayEffectExecutionScopedModifierInfoPreservesCaptureDef)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("CueUtilsScopedMod"));

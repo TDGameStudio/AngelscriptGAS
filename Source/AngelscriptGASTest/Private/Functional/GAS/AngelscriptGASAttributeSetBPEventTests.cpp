@@ -36,10 +36,23 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAttributeSetBPEventTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(DefaultBPEventsDoNotAlterBehavior)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventDefault"));
@@ -74,7 +87,7 @@ class UTestDefaultBPAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(PreAttributeChangeIsCalled)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventPreChange"));
@@ -110,7 +123,7 @@ class UTestPreChangeAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(PostAttributeChangeIsCalled)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventPostChange"));
@@ -147,7 +160,7 @@ class UTestPostChangeAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(PreAttributeBaseChangeIsCalled)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventPreBase"));
@@ -182,7 +195,7 @@ class UTestPreBaseAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(PostAttributeBaseChangeIsCalled)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventPostBase"));
@@ -219,7 +232,7 @@ class UTestPostBaseAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MultipleAttributeChangesFireEventsInOrder)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventMultiChange"));
@@ -261,7 +274,7 @@ class UTestMultiChangeAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(AttributeChangeFromZeroToPositive)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventZeroToPos"));
@@ -297,7 +310,7 @@ class UTestZeroPosAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(AttributeChangeToNegativeValue)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventNegative"));
@@ -332,7 +345,7 @@ class UTestNegativeAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(ModAttributeUnsafeBypassesPreAttributeChange)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventModUnsafe"));
@@ -371,7 +384,7 @@ class UTestModUnsafeBPAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(SetAttributeBaseValueTriggersBothPreAndPostBaseChange)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BPEventBothBase"));

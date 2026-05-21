@@ -38,6 +38,19 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityActivationTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(TryActivateAbilitySpecReturnsFalseOnInvalidHandle)
 	{
 		UAngelscriptAbilitySystemComponent* ASC = CreateTestASC();
@@ -75,7 +88,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityActivationTests,
 	TEST_METHOD(CanActivateAbilityByClassReturnsFalseWhenNotGranted)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivNotGranted"));
@@ -103,7 +116,7 @@ class UTestNotGrantedAbility : UAngelscriptGASAbility
 	TEST_METHOD(CanActivateAbilityByClassReturnsTrueWhenGranted)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivGranted"));
@@ -142,7 +155,7 @@ class UTestGrantedAbility : UAngelscriptGASAbility
 	TEST_METHOD(CanActivateAbilitySpecReturnsTrueForValidSpec)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivValidSpec"));
@@ -189,7 +202,7 @@ class UTestValidSpecAbility : UAngelscriptGASAbility
 	TEST_METHOD(SetAbilitySpecSourceObjectStoresObject)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivSrcObj"));
@@ -234,7 +247,7 @@ class UTestSrcObjAbility : UAngelscriptGASAbility
 	TEST_METHOD(BP_SetRemoveAbilityOnEndClearsInactiveSpec)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivRemoveEnd"));
@@ -268,7 +281,7 @@ class UTestRemoveEndAbility : UAngelscriptGASAbility
 	TEST_METHOD(TryActivateAbilitySpecReturnsTrueOnSuccess)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivSuccess"));
@@ -319,7 +332,7 @@ class UTestActivateSuccessAbility : UAngelscriptGASAbility
 	TEST_METHOD(GetAbilitySpecSourceObjectReturnsNullWhenNotSet)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivNoSrc"));
@@ -391,7 +404,7 @@ class UTestNoSrcAbility : UAngelscriptGASAbility
 	TEST_METHOD(SetAbilitySpecSourceObjectUpdatesExistingSpec)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityActivSetSrc"));

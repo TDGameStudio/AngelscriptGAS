@@ -58,6 +58,19 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASASCDelegateTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(OnInitAbilityActorInfoBroadcastsOnInit)
 	{
 		AActor* TestActor = SpawnTestActor();
@@ -87,7 +100,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASASCDelegateTests,
 	TEST_METHOD(OnAbilityGivenBroadcastsOnGiveAbility)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateGive"));
@@ -120,7 +133,7 @@ class UTestDelegateGiveAbility : UAngelscriptGASAbility
 	TEST_METHOD(OnAbilityRemovedBroadcastsOnClearAbility)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateRemove"));
@@ -206,7 +219,7 @@ class UTestDelegateRemoveAbility : UAngelscriptGASAbility
 	TEST_METHOD(OnAttributeSetRegisteredDelegateFires)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateAttrReg"));
@@ -244,7 +257,7 @@ class UTestDelegateRegAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MultipleGiveAbilityFiresOnAbilityGivenEachTime)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateMultiGive"));
@@ -325,7 +338,7 @@ class UTestMultiGiveAbilityB : UAngelscriptGASAbility
 	TEST_METHOD(OnAbilityGivenPassesCorrectSpec)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateSpecInfo"));
@@ -359,7 +372,7 @@ class UTestSpecInfoAbility : UAngelscriptGASAbility
 	TEST_METHOD(OnAbilityRemovedPassesCorrectSpec)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("ASCDelegateRemoveSpec"));

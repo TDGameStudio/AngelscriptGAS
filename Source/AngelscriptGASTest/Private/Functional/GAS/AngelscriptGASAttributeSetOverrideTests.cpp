@@ -41,10 +41,27 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAttributeSetOverrideTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: every TEST_METHOD now uses ASTEST_GET_ENGINE() and
+	// relies on its own ON_SCOPE_EXIT { Engine.DiscardModule(...); } to leave the
+	// shared engine clean for the next method. Each method already uses unique
+	// module + class names, so they do not collide with each other across the
+	// shared engine. See Documents/Guides/ASTestSuiteMemoryPeakRootCause.md §4.1
+	// (2026-05-14 GAS migration pilot) for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(BP_GetOwningActorReturnsCorrectActor)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideOwner"));
@@ -80,7 +97,7 @@ class UTestOwnerAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(BP_GetOwningAbilitySystemComponentReturnsCorrectASC)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideASC"));
@@ -116,7 +133,7 @@ class UTestASCRefAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(AttributeSetTrySetBaseValueFromSelf)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideSelfSet"));
@@ -155,7 +172,7 @@ class UTestSelfSetAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(AttributeSetTryGetCurrentValueFromSelf)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideSelfGet"));
@@ -193,7 +210,7 @@ class UTestSelfGetAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(PostInitPropertiesSetsAttributeName)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverridePostInit"));
@@ -230,7 +247,7 @@ class UTestPostInitAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(TrySetBaseValueFailsWithoutASC)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideNoASC"));
@@ -262,7 +279,7 @@ class UTestNoASCAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(BP_GetActorInfoReturnsValidAfterInit)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideActorInfo"));
@@ -298,7 +315,7 @@ class UTestActorInfoAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MultipleAttributeFieldsGetCorrectNames)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideMultiName"));
@@ -350,7 +367,7 @@ class UTestMultiNameAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(ASCModAttributeUnsafeAppliesModifier)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideModUnsafe"));
@@ -391,7 +408,7 @@ class UTestModUnsafeAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(SetAttributeBaseValueCheckedAndGetChecked)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideChecked"));
@@ -432,7 +449,7 @@ class UTestCheckedAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(TryGetAttributeBaseValueFromSelf)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideGetBase"));
@@ -470,7 +487,7 @@ class UTestGetBaseAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(TrySetBaseValueWithInvalidNameReturnsFalse)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideInvalidSet"));
@@ -506,7 +523,7 @@ class UTestInvalidSetAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(TryGetCurrentValueWithInvalidNameReturnsFalse)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideInvalidGet"));
@@ -543,7 +560,7 @@ class UTestInvalidGetAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(BP_GetOwningActorReturnsNullWithoutASC)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideNoASCOwner"));
@@ -573,7 +590,7 @@ class UTestNoASCOwnerAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(BP_GetOwningAbilitySystemComponentReturnsNullWithoutASC)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrOverrideNoASCComp"));

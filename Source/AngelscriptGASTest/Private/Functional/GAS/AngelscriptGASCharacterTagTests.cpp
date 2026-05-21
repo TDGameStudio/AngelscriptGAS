@@ -11,6 +11,7 @@
 #include "AngelscriptGASCharacter.h"
 #include "AngelscriptGASPawn.h"
 #include "AngelscriptAbilitySystemComponent.h"
+#include "Components/ActorTestSpawner.h"
 #include "CQTest.h"
 #include "Shared/AngelscriptFunctionalTestUtils.h"
 #include "Shared/AngelscriptTestMacros.h"
@@ -25,36 +26,95 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASCharacterTagTests,
 	"Angelscript.GAS.Functional.CharacterTags",
 	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 {
+	FActorTestSpawner Spawner;
+
+	template <typename ActorType>
+	ActorType* SpawnConcreteScriptSubclass(
+		FAngelscriptEngine& Engine,
+		FName ModuleName,
+		const FString& Filename,
+		const FString& Source,
+		FName ExpectedGeneratedClassName)
+	{
+		using namespace AngelscriptFunctionalTestUtils;
+
+		UClass* ScriptClass = CompileScriptModule(
+			*TestRunner,
+			Engine,
+			ModuleName,
+			Filename,
+			Source,
+			ExpectedGeneratedClassName);
+		if (ScriptClass == nullptr)
+		{
+			return nullptr;
+		}
+
+		return SpawnScriptActor<ActorType>(*TestRunner, Spawner, ScriptClass);
+	}
+
+	AAngelscriptGASCharacter* SpawnConcreteGASCharacter(FAngelscriptEngine& Engine, FName ModuleName, const FString& ClassName)
+	{
+		return SpawnConcreteScriptSubclass<AAngelscriptGASCharacter>(
+			Engine,
+			ModuleName,
+			ClassName + TEXT(".as"),
+			FString::Printf(TEXT(R"AS(
+UCLASS()
+class %s : AAngelscriptGASCharacter
+{
+}
+)AS"), *ClassName),
+			FName(*ClassName));
+	}
+
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(GASActorGetAbilitySystemComponentReturnsASC)
 	{
-		AAngelscriptGASActor* Actor = NewObject<AAngelscriptGASActor>(GetTransientPackage());
+		const AAngelscriptGASActor* Actor = GetDefault<AAngelscriptGASActor>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASActor should have a class default object"), Actor)) { return; }
 		UAbilitySystemComponent* ASC = Actor->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASActor::GetAbilitySystemComponent should return non-null"),
+			TEXT("AAngelscriptGASActor CDO GetAbilitySystemComponent should return non-null"),
 			ASC);
 	}
 
 	TEST_METHOD(GASPawnGetAbilitySystemComponentReturnsASC)
 	{
-		AAngelscriptGASPawn* Pawn = NewObject<AAngelscriptGASPawn>(GetTransientPackage());
+		const AAngelscriptGASPawn* Pawn = GetDefault<AAngelscriptGASPawn>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASPawn should have a class default object"), Pawn)) { return; }
 		UAbilitySystemComponent* ASC = Pawn->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASPawn::GetAbilitySystemComponent should return non-null"),
+			TEXT("AAngelscriptGASPawn CDO GetAbilitySystemComponent should return non-null"),
 			ASC);
 	}
 
 	TEST_METHOD(GASCharacterGetAbilitySystemComponentReturnsASC)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASCharacter::GetAbilitySystemComponent should return non-null"),
+			TEXT("AAngelscriptGASCharacter CDO GetAbilitySystemComponent should return non-null"),
 			ASC);
 	}
 
 	TEST_METHOD(GetOwnedGameplayTagsReturnsEmptyByDefault)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		FGameplayTagContainer TagContainer;
 		Character->GetOwnedGameplayTags(TagContainer);
 		TestRunner->TestEqual(
@@ -64,7 +124,15 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASCharacterTagTests,
 
 	TEST_METHOD(GetOwnedGameplayTagsReflectsASCTags)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		FAngelscriptEngineScope EngineScope(Engine);
+
+		static const FName ModuleName(TEXT("CharTagConcreteReflectsTags"));
+		ON_SCOPE_EXIT { Engine.DiscardModule(*ModuleName.ToString()); };
+
+		AAngelscriptGASCharacter* Character = SpawnConcreteGASCharacter(Engine, ModuleName, TEXT("ATestCharTagReflectsTags"));
+		if (!TestRunner->TestNotNull(TEXT("Concrete GAS character subclass should spawn"), Character)) { return; }
+
 		UAngelscriptAbilitySystemComponent* ASC = Cast<UAngelscriptAbilitySystemComponent>(Character->GetAbilitySystemComponent());
 		if (!TestRunner->TestNotNull(TEXT("Character ASC should exist"), ASC)) { return; }
 
@@ -86,7 +154,15 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASCharacterTagTests,
 
 	TEST_METHOD(GetOwnedGameplayTagsUpdatesOnTagRemoval)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		FAngelscriptEngineScope EngineScope(Engine);
+
+		static const FName ModuleName(TEXT("CharTagConcreteRemovesTags"));
+		ON_SCOPE_EXIT { Engine.DiscardModule(*ModuleName.ToString()); };
+
+		AAngelscriptGASCharacter* Character = SpawnConcreteGASCharacter(Engine, ModuleName, TEXT("ATestCharTagRemovesTags"));
+		if (!TestRunner->TestNotNull(TEXT("Concrete GAS character subclass should spawn"), Character)) { return; }
+
 		UAngelscriptAbilitySystemComponent* ASC = Cast<UAngelscriptAbilitySystemComponent>(Character->GetAbilitySystemComponent());
 		if (!TestRunner->TestNotNull(TEXT("Character ASC should exist"), ASC)) { return; }
 
@@ -110,7 +186,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASCharacterTagTests,
 	TEST_METHOD(ScriptSubclassOfGASPawnInheritsASC)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("CharTagPawnSub"));
@@ -136,7 +212,7 @@ class ATestGASPawnSub : AAngelscriptGASPawn
 	TEST_METHOD(ScriptSubclassOfGASCharacterInheritsInterfaces)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("CharTagCharSub"));
@@ -164,7 +240,8 @@ class ATestGASCharacterSub : AAngelscriptGASCharacter
 
 	TEST_METHOD(GASCharacterGetOwnedGameplayTagsReturnsEmptyByDefault)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		FGameplayTagContainer Tags;
 		Character->GetOwnedGameplayTags(Tags);
 		TestRunner->TestTrue(
@@ -174,16 +251,18 @@ class ATestGASCharacterSub : AAngelscriptGASCharacter
 
 	TEST_METHOD(GASCharacterGetAbilitySystemComponentReturnsNonNull)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASCharacter::GetAbilitySystemComponent should return non-null"),
+			TEXT("AAngelscriptGASCharacter CDO GetAbilitySystemComponent should return non-null"),
 			ASC);
 	}
 
 	TEST_METHOD(GASCharacterASCIsAngelscriptType)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
 		if (!TestRunner->TestNotNull(TEXT("ASC should exist"), ASC)) { return; }
 		TestRunner->TestTrue(
@@ -193,10 +272,11 @@ class ATestGASCharacterSub : AAngelscriptGASCharacter
 
 	TEST_METHOD(GASPawnGetAbilitySystemComponentReturnsNonNull)
 	{
-		AAngelscriptGASPawn* Pawn = NewObject<AAngelscriptGASPawn>(GetTransientPackage());
+		const AAngelscriptGASPawn* Pawn = GetDefault<AAngelscriptGASPawn>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASPawn should have a class default object"), Pawn)) { return; }
 		UAbilitySystemComponent* ASC = Pawn->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASPawn::GetAbilitySystemComponent should return non-null"),
+			TEXT("AAngelscriptGASPawn CDO GetAbilitySystemComponent should return non-null"),
 			ASC);
 	}
 };

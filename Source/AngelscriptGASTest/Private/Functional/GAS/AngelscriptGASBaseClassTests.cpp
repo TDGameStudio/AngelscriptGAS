@@ -23,6 +23,19 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASBaseClassTests,
 	"Angelscript.GAS.Functional.BaseClasses",
 	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 {
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(GASActorImplementsAbilitySystemInterface)
 	{
 		UClass* ActorClass = AAngelscriptGASActor::StaticClass();
@@ -99,7 +112,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASBaseClassTests,
 	TEST_METHOD(ScriptSubclassInheritsASCFromGASActor)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("BaseClassScriptActor"));
@@ -130,28 +143,31 @@ class ATestGASActor : AAngelscriptGASActor
 
 	TEST_METHOD(GASActorASCIsNotNullAfterConstruction)
 	{
-		AAngelscriptGASActor* Actor = NewObject<AAngelscriptGASActor>(GetTransientPackage());
+		const AAngelscriptGASActor* Actor = GetDefault<AAngelscriptGASActor>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASActor should have a class default object"), Actor)) { return; }
 		UAbilitySystemComponent* ASC = Actor->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASActor should have a non-null ASC after construction"),
+			TEXT("AAngelscriptGASActor CDO should have a non-null ASC after construction"),
 			ASC);
 	}
 
 	TEST_METHOD(GASPawnASCIsNotNullAfterConstruction)
 	{
-		AAngelscriptGASPawn* Pawn = NewObject<AAngelscriptGASPawn>(GetTransientPackage());
+		const AAngelscriptGASPawn* Pawn = GetDefault<AAngelscriptGASPawn>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASPawn should have a class default object"), Pawn)) { return; }
 		UAbilitySystemComponent* ASC = Pawn->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASPawn should have a non-null ASC after construction"),
+			TEXT("AAngelscriptGASPawn CDO should have a non-null ASC after construction"),
 			ASC);
 	}
 
 	TEST_METHOD(GASCharacterASCIsNotNullAfterConstruction)
 	{
-		AAngelscriptGASCharacter* Character = NewObject<AAngelscriptGASCharacter>(GetTransientPackage());
+		const AAngelscriptGASCharacter* Character = GetDefault<AAngelscriptGASCharacter>();
+		if (!TestRunner->TestNotNull(TEXT("AAngelscriptGASCharacter should have a class default object"), Character)) { return; }
 		UAbilitySystemComponent* ASC = Character->GetAbilitySystemComponent();
 		TestRunner->TestNotNull(
-			TEXT("AAngelscriptGASCharacter should have a non-null ASC after construction"),
+			TEXT("AAngelscriptGASCharacter CDO should have a non-null ASC after construction"),
 			ASC);
 	}
 

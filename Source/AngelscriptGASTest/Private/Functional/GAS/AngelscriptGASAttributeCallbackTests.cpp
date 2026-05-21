@@ -38,10 +38,25 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAttributeCallbackTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale (each TEST_METHOD uses unique module + class names and
+	// its own ON_SCOPE_EXIT { DiscardModule(...) } so the shared engine stays
+	// clean across methods).
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(RegisterCallbackForAttributeBindsTrampoline)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackTrampoline"));
@@ -81,7 +96,7 @@ class UTestTrampolineAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(GetAndRegisterCallbackForAttributeReturnsCurrentValue)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackGetReg"));
@@ -117,7 +132,7 @@ class UTestGetRegAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(OnAttributeChangedTrampolineBroadcastsCorrectData)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackData"));
@@ -163,7 +178,7 @@ class UTestCallbackDataAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(RegisterCallbackForAttributeNoDuplicateBinding)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackNoDup"));
@@ -206,7 +221,7 @@ class UTestNoDupAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(GetAndRegisterAttributeChangedCallbackReturnsCurrentValue)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackGetRegChanged"));
@@ -262,7 +277,7 @@ class UTestGetRegChangedAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(RegisterAttributeChangedCallbackWithNullObjectDoesNotCrash)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackNullObj"));
@@ -294,7 +309,7 @@ class UTestNullObjAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(RegisterAttributeChangedCallbackWithNoneNameDoesNotCrash)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackNoneName"));
@@ -326,7 +341,7 @@ class UTestNoneNameAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MultipleAttributesEachGetOwnCallback)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackMulti"));
@@ -377,7 +392,7 @@ class UTestMultiCallbackAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(CallbackFiredWhenBaseValueIsApplied)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackUnchanged"));
@@ -422,7 +437,7 @@ class UTestUnchangedAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(GetAndRegisterCallbackForAttributeAlsoBindsTrampoline)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackGetRegBind"));
@@ -465,7 +480,7 @@ class UTestGetRegBindAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(RegisterCallbackForDifferentAttributesIndependent)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackIndep"));
@@ -516,7 +531,7 @@ class UTestIndepAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(OnAttributeChangedNotFiredWithoutRegistration)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackNoReg"));
@@ -556,7 +571,7 @@ class UTestNoRegAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(RegisterAttributeChangedCallbackWithValidParamsDoesNotCrash)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AttrCallbackValidParams"));

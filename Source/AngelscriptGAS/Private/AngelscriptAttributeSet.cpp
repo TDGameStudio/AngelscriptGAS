@@ -2,6 +2,7 @@
 #include "AngelscriptAbilitySystemComponent.h"
 
 #include "AngelscriptEngine.h"
+#include "AbilitySystemGlobals.h"
 #include "Runtime/Engine/Public/Net/UnrealNetwork.h"
 
 bool UAngelscriptAttributeSet::BP_PreGameplayEffectExecute_Implementation(const FGameplayEffectSpec& EffectSpec, FGameplayModifierEvaluatedData& EvaluatedData, UAngelscriptAbilitySystemComponent* AbilitySystemComponent)
@@ -125,17 +126,22 @@ void UAngelscriptAttributeSet::OnRep_Attribute(FAngelscriptGameplayAttributeData
 
 AActor* UAngelscriptAttributeSet::BP_GetOwningActor()
 {
-	return GetOwningActor();
+	return Cast<AActor>(GetOuter());
 }
 
 UAngelscriptAbilitySystemComponent* UAngelscriptAttributeSet::BP_GetOwningAbilitySystemComponent() const
 {
-	return Cast<UAngelscriptAbilitySystemComponent>(GetOwningAbilitySystemComponent());
+	AActor* OwningActor = Cast<AActor>(GetOuter());
+	return OwningActor != nullptr
+		? Cast<UAngelscriptAbilitySystemComponent>(UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(OwningActor))
+		: nullptr;
 }
 
 FGameplayAbilityActorInfo& UAngelscriptAttributeSet::BP_GetActorInfo() const
 {
-	return *GetActorInfo();
+	UAngelscriptAbilitySystemComponent* AbilitySystemComponent = BP_GetOwningAbilitySystemComponent();
+	check(AbilitySystemComponent != nullptr && AbilitySystemComponent->AbilityActorInfo.IsValid());
+	return *AbilitySystemComponent->AbilityActorInfo.Get();
 }
 
 bool UAngelscriptAttributeSet::TrySetAttributeBaseValue(FName AttributeName, float NewBaseValue)

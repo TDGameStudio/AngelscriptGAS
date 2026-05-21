@@ -24,10 +24,23 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASGameplayEffectUtilsTests,
 	"Angelscript.GAS.Functional.GameplayEffectUtils",
 	EAutomationTestFlags::EditorContext | EAutomationTestFlags::EngineFilter)
 {
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(CaptureGameplayAttributeReturnsValidDefinition)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("EffUtilCapture"));
@@ -71,7 +84,7 @@ class UEffUtilCaptureAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(CaptureGameplayAttributeTargetNotSnapshot)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("EffUtilCaptureTarget"));
@@ -115,7 +128,7 @@ class UEffUtilCaptureTargetAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MakeGameplayModifierEvaluationDataSetsFields)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("EffUtilModEval"));
@@ -206,7 +219,7 @@ class UEffUtilModEvalAttributes : UAngelscriptAttributeSet
 	TEST_METHOD(MakeExecutionScopedModifierInfoSetsCaptureDef)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("EffUtilScopedMod"));

@@ -36,10 +36,23 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityLifecycleScriptTests,
 		return ASC;
 	}
 
+	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
+	// pilot for rationale.
+	BEFORE_ALL()
+	{
+		ASTEST_CREATE_ENGINE();
+	}
+
+	AFTER_ALL()
+	{
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
+		ASTEST_RESET_ENGINE(Engine);
+	}
+
 	TEST_METHOD(GiveAbilityFromScriptReturnsValidHandle)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleGive"));
@@ -68,7 +81,7 @@ class UTestLifecycleAbility : UAngelscriptGASAbility
 	TEST_METHOD(HasAbilityReturnsTrueAfterGive)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleHas"));
@@ -97,7 +110,7 @@ class UTestHasAbility : UAngelscriptGASAbility
 	TEST_METHOD(HasAbilityReturnsFalseBeforeGive)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleNoGive"));
@@ -125,7 +138,7 @@ class UTestNoGiveAbility : UAngelscriptGASAbility
 	TEST_METHOD(IsAbilityActiveReturnsFalseWhenNotActivated)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleInactive"));
@@ -154,7 +167,7 @@ class UTestInactiveAbility : UAngelscriptGASAbility
 	TEST_METHOD(CancelAbilityDoesNotCrashOnInactiveAbility)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleCancelInactive"));
@@ -197,7 +210,7 @@ class UTestCancelInactiveAbility : UAngelscriptGASAbility
 	TEST_METHOD(GiveAbilityAndActivateOnceReturnsValidHandle)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleActivateOnce"));
@@ -226,7 +239,7 @@ class UTestActivateOnceAbility : UAngelscriptGASAbility
 	TEST_METHOD(GetCooldownTimeRemainingReturnsZeroForNoCooldown)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleCooldown"));
@@ -276,7 +289,7 @@ class UTestNoCooldownAbility : UAngelscriptGASAbility
 	TEST_METHOD(GiveAbilityWithLevelSetsSpecLevel)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleLevel"));
@@ -306,7 +319,7 @@ class UTestLevelAbility : UAngelscriptGASAbility
 	TEST_METHOD(GiveAbilityWithInputIDSetsSpecInputID)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleInputID"));
@@ -336,7 +349,7 @@ class UTestInputIDAbility : UAngelscriptGASAbility
 	TEST_METHOD(GiveAbilityWithSourceObjectSetsSpecSourceObject)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleSrcObj"));
@@ -368,7 +381,7 @@ class UTestSrcObjAbility : UAngelscriptGASAbility
 	TEST_METHOD(ClearAbilityRemovesAbility)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleClear"));
@@ -410,7 +423,7 @@ class UTestClearAbility : UAngelscriptGASAbility
 	TEST_METHOD(GiveAbilityTwiceDoesNotDuplicate)
 	{
 		using namespace AngelscriptFunctionalTestUtils;
-		FAngelscriptEngine& Engine = ASTEST_CREATE_ENGINE_FULL();
+		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope EngineScope(Engine);
 
 		static const FName ModuleName(TEXT("AbilityLifecycleDup"));
