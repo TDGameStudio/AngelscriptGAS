@@ -30,6 +30,10 @@ This plugin depends on:
 3. Regenerate project files if needed.
 4. Build your editor target with both plugins enabled.
 
+## License
+
+This project is licensed under the MIT License. See `LICENSE.md` for details.
+
 ## History
 
 This repository starts from a snapshot import. Earlier development history and planning context remain in `TDGameStudio/AngelscriptProject`.
