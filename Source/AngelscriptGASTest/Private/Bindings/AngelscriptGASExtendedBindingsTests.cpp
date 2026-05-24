@@ -5,7 +5,7 @@
 
 #include "CQTest.h"
 #include "Shared/AngelscriptTestMacros.h"
-#include "Shared/AngelscriptBindingsModuleBuilder.h"
+#include "Shared/AngelscriptTestModuleScope.h"
 #include "Shared/AngelscriptBindingsAssertions.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
@@ -25,7 +25,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASExtendedBindingsTest,
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASExtended_Attribute"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASGASExtended_Attribute"), TEXT(R"(
 int Attribute_DefaultInvalid()
 {
 	FGameplayAttribute Attr;
@@ -45,7 +45,7 @@ int Attribute_DefaultInvalid()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASExtended_AbilitySpec"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASGASExtended_AbilitySpec"), TEXT(R"(
 int AbilitySpec_DefaultLevel()
 {
 	FGameplayAbilitySpec Spec;

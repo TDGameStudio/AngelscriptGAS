@@ -10,7 +10,7 @@
 
 #include "CQTest.h"
 #include "Shared/AngelscriptTestMacros.h"
-#include "Shared/AngelscriptBindingsModuleBuilder.h"
+#include "Shared/AngelscriptTestModuleScope.h"
 #include "Shared/AngelscriptBindingsAssertions.h"
 
 #if WITH_DEV_AUTOMATION_TESTS
@@ -30,7 +30,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilitySpecBindingsTests,
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorLevel"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorLevel"), TEXT(R"(
 int AbilitySpec_CtorLevel()
 {
 	FGameplayAbilitySpec Spec;
@@ -46,7 +46,7 @@ int AbilitySpec_CtorLevel()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorInputID"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorInputID"), TEXT(R"(
 int AbilitySpec_CtorInputID()
 {
 	FGameplayAbilitySpec Spec;
@@ -62,7 +62,7 @@ int AbilitySpec_CtorInputID()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_InputPressed"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_InputPressed"), TEXT(R"(
 int AbilitySpec_InputPressed()
 {
 	FGameplayAbilitySpec Spec;
@@ -87,7 +87,7 @@ int AbilitySpec_InputPressed()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_RemoveAfterActivation"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_RemoveAfterActivation"), TEXT(R"(
 int AbilitySpec_RemoveAfterActivation()
 {
 	FGameplayAbilitySpec Spec;
@@ -109,7 +109,7 @@ int AbilitySpec_RemoveAfterActivation()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PendingRemove"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PendingRemove"), TEXT(R"(
 int AbilitySpec_PendingRemove()
 {
 	FGameplayAbilitySpec Spec;
@@ -131,7 +131,7 @@ int AbilitySpec_PendingRemove()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActivateOnce"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActivateOnce"), TEXT(R"(
 int AbilitySpec_ActivateOnce()
 {
 	FGameplayAbilitySpec Spec;
@@ -153,7 +153,7 @@ int AbilitySpec_ActivateOnce()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_IsActive"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_IsActive"), TEXT(R"(
 int AbilitySpec_IsActive()
 {
 	FGameplayAbilitySpec Spec;
@@ -170,7 +170,7 @@ int AbilitySpec_IsActive()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActiveCount"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActiveCount"), TEXT(R"(
 int AbilitySpec_ActiveCount()
 {
 	FGameplayAbilitySpec Spec;
@@ -187,7 +187,7 @@ int AbilitySpec_ActiveCount()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorClass"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorClass"), TEXT(R"(
 int AbilitySpec_CtorClass()
 {
 	FGameplayAbilitySpec Spec;
@@ -205,7 +205,7 @@ int AbilitySpec_CtorClass()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PrimaryInstance"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PrimaryInstance"), TEXT(R"(
 int AbilitySpec_PrimaryInstance()
 {
 	FGameplayAbilitySpec Spec;
@@ -222,7 +222,7 @@ int AbilitySpec_PrimaryInstance()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_DynTags"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_DynTags"), TEXT(R"(
 int AbilitySpec_DynTags()
 {
 	FGameplayAbilitySpec Spec;
@@ -239,7 +239,7 @@ int AbilitySpec_DynTags()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_SetByCaller"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_SetByCaller"), TEXT(R"(
 int AbilitySpec_SetByCaller()
 {
 	FGameplayAbilitySpec Spec;

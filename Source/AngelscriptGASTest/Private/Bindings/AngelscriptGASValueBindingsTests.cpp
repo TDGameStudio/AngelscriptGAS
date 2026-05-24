@@ -18,7 +18,7 @@
 
 #include "CQTest.h"
 #include "Shared/AngelscriptTestMacros.h"
-#include "Shared/AngelscriptBindingsModuleBuilder.h"
+#include "Shared/AngelscriptTestModuleScope.h"
 #include "Shared/AngelscriptBindingsAssertions.h"
 
 #include "UObject/UObjectGlobals.h"
@@ -62,7 +62,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASValueBindingsTest,
 		TestRunner->AddExpectedError(TEXT("ASGASValue_EffectSpecNullDef"), EAutomationExpectedErrorFlags::Contains, 1);
 		TestRunner->AddExpectedError(TEXT("void TriggerNullEffectSpec() | Line 7 | Col 2"), EAutomationExpectedErrorFlags::Contains, 1);
 
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASValue_EffectSpecNullDef"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASGASValue_EffectSpecNullDef"), TEXT(R"(
 void TriggerNullEffectSpec()
 {
 	TSubclassOf<UGameplayEffect> EmptyEffectClass;
@@ -96,7 +96,7 @@ void TriggerNullEffectSpec()
 		TestRunner->AddExpectedError(TEXT("TriggerNullOwnerAndASC"), EAutomationExpectedErrorFlags::Contains, 0, false);
 		TestRunner->AddExpectedError(TEXT("TriggerNullASC"), EAutomationExpectedErrorFlags::Contains, 0, false);
 
-		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASValue_TagPropMapNullGuards"), TEXT(R"(
+		FScopedAngelscriptModule Mod(*TestRunner, Engine, TEXT("ASGASValue_TagPropMapNullGuards"), TEXT(R"(
 void TriggerNullOwnerAndASC(int& OutStep)
 {
 	OutStep = 1;
