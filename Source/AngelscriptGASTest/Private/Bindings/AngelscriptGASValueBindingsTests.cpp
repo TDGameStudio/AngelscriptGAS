@@ -18,7 +18,6 @@
 
 #include "CQTest.h"
 #include "Shared/AngelscriptTestMacros.h"
-#include "Shared/AngelscriptBindingsCoverage.h"
 #include "Shared/AngelscriptBindingsModuleBuilder.h"
 #include "Shared/AngelscriptBindingsAssertions.h"
 
@@ -34,13 +33,6 @@ using namespace AngelscriptReflectiveAccess;
 // Profile
 // ----------------------------------------------------------------------------
 
-static const FBindingsCoverageProfile GGASValueProfile{
-	TEXT("GASValue"),              // Theme
-	TEXT(""),                      // Variant
-	TEXT("ASGASValue"),            // ModulePrefix
-	TEXT("GASValue"),              // CasePrefix
-	TEXT("GASValueBindings"),      // LogCategory
-};
 
 // ----------------------------------------------------------------------------
 // Test class
@@ -70,7 +62,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASValueBindingsTest,
 		TestRunner->AddExpectedError(TEXT("ASGASValue_EffectSpecNullDef"), EAutomationExpectedErrorFlags::Contains, 1);
 		TestRunner->AddExpectedError(TEXT("void TriggerNullEffectSpec() | Line 7 | Col 2"), EAutomationExpectedErrorFlags::Contains, 1);
 
-		FCoverageModuleScope Mod(*TestRunner, Engine, GGASValueProfile, TEXT("EffectSpecNullDef"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASValue_EffectSpecNullDef"), TEXT(R"(
 void TriggerNullEffectSpec()
 {
 	TSubclassOf<UGameplayEffect> EmptyEffectClass;
@@ -83,7 +75,7 @@ void TriggerNullEffectSpec()
 		auto& M = Mod.GetModule();
 
 		AngelscriptTestBindings::ExecuteFunctionExpectingScriptException(
-			*TestRunner, Engine, M, GGASValueProfile,
+			*TestRunner, Engine, M, 
 			TEXT("void TriggerNullEffectSpec()"),
 			TEXT("FGameplayEffectSpec null-def constructor should raise exception"),
 			TEXT("GameplayEffect was null."));
@@ -104,7 +96,7 @@ void TriggerNullEffectSpec()
 		TestRunner->AddExpectedError(TEXT("TriggerNullOwnerAndASC"), EAutomationExpectedErrorFlags::Contains, 0, false);
 		TestRunner->AddExpectedError(TEXT("TriggerNullASC"), EAutomationExpectedErrorFlags::Contains, 0, false);
 
-		FCoverageModuleScope Mod(*TestRunner, Engine, GGASValueProfile, TEXT("TagPropMapNullGuards"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASGASValue_TagPropMapNullGuards"), TEXT(R"(
 void TriggerNullOwnerAndASC(int& OutStep)
 {
 	OutStep = 1;

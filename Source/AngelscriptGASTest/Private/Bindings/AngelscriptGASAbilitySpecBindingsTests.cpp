@@ -10,7 +10,6 @@
 
 #include "CQTest.h"
 #include "Shared/AngelscriptTestMacros.h"
-#include "Shared/AngelscriptBindingsCoverage.h"
 #include "Shared/AngelscriptBindingsModuleBuilder.h"
 #include "Shared/AngelscriptBindingsAssertions.h"
 
@@ -19,9 +18,6 @@
 using namespace AngelscriptTestSupport;
 using namespace AngelscriptTestBindings;
 
-static const FBindingsCoverageProfile GAbilitySpecProfile{
-	TEXT("AbilitySpec"), TEXT(""), TEXT("ASAbilitySpec"), TEXT("AbilitySpec"), TEXT("AbilitySpecBindings"),
-};
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilitySpecBindingsTests,
 	"Angelscript.GAS.Bindings.AbilitySpec",
@@ -34,7 +30,7 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilitySpecBindingsTests,
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("CtorLevel"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorLevel"), TEXT(R"(
 int AbilitySpec_CtorLevel()
 {
 	FGameplayAbilitySpec Spec;
@@ -42,7 +38,7 @@ int AbilitySpec_CtorLevel()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorLevel()"), TEXT("Default-constructed spec level should be 1"), 1);
 	}
 
@@ -50,7 +46,7 @@ int AbilitySpec_CtorLevel()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("CtorInputID"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorInputID"), TEXT(R"(
 int AbilitySpec_CtorInputID()
 {
 	FGameplayAbilitySpec Spec;
@@ -58,7 +54,7 @@ int AbilitySpec_CtorInputID()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorInputID()"), TEXT("Default-constructed spec InputID should be -1"), -1);
 	}
 
@@ -66,7 +62,7 @@ int AbilitySpec_CtorInputID()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("InputPressed"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_InputPressed"), TEXT(R"(
 int AbilitySpec_InputPressed()
 {
 	FGameplayAbilitySpec Spec;
@@ -82,7 +78,7 @@ int AbilitySpec_InputPressed()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_InputPressed()"),
 			TEXT("InputPressed bit-field get/set should round-trip correctly"), 1);
 	}
@@ -91,7 +87,7 @@ int AbilitySpec_InputPressed()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("RemoveAfterActivation"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_RemoveAfterActivation"), TEXT(R"(
 int AbilitySpec_RemoveAfterActivation()
 {
 	FGameplayAbilitySpec Spec;
@@ -104,7 +100,7 @@ int AbilitySpec_RemoveAfterActivation()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_RemoveAfterActivation()"),
 			TEXT("RemoveAfterActivation bit-field get/set should round-trip correctly"), 1);
 	}
@@ -113,7 +109,7 @@ int AbilitySpec_RemoveAfterActivation()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("PendingRemove"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PendingRemove"), TEXT(R"(
 int AbilitySpec_PendingRemove()
 {
 	FGameplayAbilitySpec Spec;
@@ -126,7 +122,7 @@ int AbilitySpec_PendingRemove()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_PendingRemove()"),
 			TEXT("PendingRemove bit-field get/set should round-trip correctly"), 1);
 	}
@@ -135,7 +131,7 @@ int AbilitySpec_PendingRemove()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("ActivateOnce"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActivateOnce"), TEXT(R"(
 int AbilitySpec_ActivateOnce()
 {
 	FGameplayAbilitySpec Spec;
@@ -148,7 +144,7 @@ int AbilitySpec_ActivateOnce()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_ActivateOnce()"),
 			TEXT("ActivateOnce bit-field get/set should round-trip correctly"), 1);
 	}
@@ -157,7 +153,7 @@ int AbilitySpec_ActivateOnce()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("IsActive"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_IsActive"), TEXT(R"(
 int AbilitySpec_IsActive()
 {
 	FGameplayAbilitySpec Spec;
@@ -165,7 +161,7 @@ int AbilitySpec_IsActive()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_IsActive()"),
 			TEXT("Default-constructed spec should not be active"), 1);
 	}
@@ -174,7 +170,7 @@ int AbilitySpec_IsActive()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("ActiveCount"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_ActiveCount"), TEXT(R"(
 int AbilitySpec_ActiveCount()
 {
 	FGameplayAbilitySpec Spec;
@@ -182,7 +178,7 @@ int AbilitySpec_ActiveCount()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_ActiveCount()"),
 			TEXT("Default-constructed spec ActiveCount should be 0"), 0);
 	}
@@ -191,7 +187,7 @@ int AbilitySpec_ActiveCount()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("CtorClass"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_CtorClass"), TEXT(R"(
 int AbilitySpec_CtorClass()
 {
 	FGameplayAbilitySpec Spec;
@@ -200,7 +196,7 @@ int AbilitySpec_CtorClass()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorClass()"),
 			TEXT("Default-constructed spec should have null Ability"), 1);
 	}
@@ -209,7 +205,7 @@ int AbilitySpec_CtorClass()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("PrimaryInstance"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_PrimaryInstance"), TEXT(R"(
 int AbilitySpec_PrimaryInstance()
 {
 	FGameplayAbilitySpec Spec;
@@ -217,7 +213,7 @@ int AbilitySpec_PrimaryInstance()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_PrimaryInstance()"),
 			TEXT("Default-constructed spec GetPrimaryInstance should return null"), 1);
 	}
@@ -226,7 +222,7 @@ int AbilitySpec_PrimaryInstance()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("DynTags"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_DynTags"), TEXT(R"(
 int AbilitySpec_DynTags()
 {
 	FGameplayAbilitySpec Spec;
@@ -234,7 +230,7 @@ int AbilitySpec_DynTags()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_DynTags()"),
 			TEXT("Default-constructed spec DynamicAbilityTags should be empty"), 0);
 	}
@@ -243,7 +239,7 @@ int AbilitySpec_DynTags()
 	{
 		FAngelscriptEngine& Engine = ASTEST_GET_ENGINE();
 		FAngelscriptEngineScope Scope(Engine);
-		FCoverageModuleScope Mod(*TestRunner, Engine, GAbilitySpecProfile, TEXT("SetByCaller"), TEXT(R"(
+		FCoverageModuleScope Mod(*TestRunner, Engine, TEXT("ASAbilitySpec_SetByCaller"), TEXT(R"(
 int AbilitySpec_SetByCaller()
 {
 	FGameplayAbilitySpec Spec;
@@ -251,7 +247,7 @@ int AbilitySpec_SetByCaller()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), GAbilitySpecProfile,
+		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_SetByCaller()"),
 			TEXT("Default-constructed spec SetByCallerTagMagnitudes should be empty"), 0);
 	}
