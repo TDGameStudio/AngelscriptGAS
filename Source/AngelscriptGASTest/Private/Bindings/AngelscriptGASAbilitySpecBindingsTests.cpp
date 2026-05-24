@@ -15,8 +15,6 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-using namespace AngelscriptTestSupport;
-using namespace AngelscriptTestBindings;
 
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilitySpecBindingsTests,
@@ -38,7 +36,7 @@ int AbilitySpec_CtorLevel()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorLevel()"), TEXT("Default-constructed spec level should be 1"), 1);
 	}
 
@@ -54,7 +52,7 @@ int AbilitySpec_CtorInputID()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorInputID()"), TEXT("Default-constructed spec InputID should be -1"), -1);
 	}
 
@@ -78,7 +76,7 @@ int AbilitySpec_InputPressed()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_InputPressed()"),
 			TEXT("InputPressed bit-field get/set should round-trip correctly"), 1);
 	}
@@ -100,7 +98,7 @@ int AbilitySpec_RemoveAfterActivation()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_RemoveAfterActivation()"),
 			TEXT("RemoveAfterActivation bit-field get/set should round-trip correctly"), 1);
 	}
@@ -122,7 +120,7 @@ int AbilitySpec_PendingRemove()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_PendingRemove()"),
 			TEXT("PendingRemove bit-field get/set should round-trip correctly"), 1);
 	}
@@ -144,7 +142,7 @@ int AbilitySpec_ActivateOnce()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_ActivateOnce()"),
 			TEXT("ActivateOnce bit-field get/set should round-trip correctly"), 1);
 	}
@@ -161,7 +159,7 @@ int AbilitySpec_IsActive()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_IsActive()"),
 			TEXT("Default-constructed spec should not be active"), 1);
 	}
@@ -178,7 +176,7 @@ int AbilitySpec_ActiveCount()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_ActiveCount()"),
 			TEXT("Default-constructed spec ActiveCount should be 0"), 0);
 	}
@@ -196,7 +194,7 @@ int AbilitySpec_CtorClass()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_CtorClass()"),
 			TEXT("Default-constructed spec should have null Ability"), 1);
 	}
@@ -213,7 +211,7 @@ int AbilitySpec_PrimaryInstance()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_PrimaryInstance()"),
 			TEXT("Default-constructed spec GetPrimaryInstance should return null"), 1);
 	}
@@ -230,7 +228,7 @@ int AbilitySpec_DynTags()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_DynTags()"),
 			TEXT("Default-constructed spec DynamicAbilityTags should be empty"), 0);
 	}
@@ -247,7 +245,7 @@ int AbilitySpec_SetByCaller()
 }
 )"));
 		if (!Mod.IsValid()) { return; }
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_SetByCaller()"),
 			TEXT("Default-constructed spec SetByCallerTagMagnitudes should be empty"), 0);
 	}

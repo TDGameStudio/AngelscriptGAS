@@ -20,7 +20,6 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-using namespace AngelscriptTestSupport;
 
 namespace AngelscriptGASASCDelegateTestHelpers
 {
@@ -280,7 +279,7 @@ class UTestMultiGiveAbilityB : UAngelscriptGASAbility
 			TEXT("UTestMultiGiveAbilityA"));
 		if (AbilityClassA == nullptr) { return; }
 
-		UClass* AbilityClassB = AngelscriptTestSupport::FindGeneratedClass(&Engine, TEXT("UTestMultiGiveAbilityB"));
+		UClass* AbilityClassB = FindGeneratedClass(&Engine, TEXT("UTestMultiGiveAbilityB"));
 		if (!TestRunner->TestNotNull(TEXT("Second ability class should be generated"), AbilityClassB)) { return; }
 
 		AActor* TestActor = SpawnTestActor();

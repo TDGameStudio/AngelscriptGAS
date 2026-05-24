@@ -17,7 +17,6 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-using namespace AngelscriptTestSupport;
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASBaseClassTests,
 	"Angelscript.GAS.Functional.BaseClasses",

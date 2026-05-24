@@ -10,8 +10,6 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-using namespace AngelscriptTestSupport;
-using namespace AngelscriptTestBindings;
 
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASExtendedBindingsTest,
@@ -37,7 +35,7 @@ int Attribute_DefaultInvalid()
 			TestRunner->AddInfo(TEXT("FGameplayAttribute not available, skipping"));
 			return;
 		}
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int Attribute_DefaultInvalid()"), TEXT("Default FGameplayAttribute is invalid"), 1);
 	}
 
@@ -58,7 +56,7 @@ int AbilitySpec_DefaultLevel()
 			return;
 		}
 		// UE 5.7: FGameplayAbilitySpec default Level changed from 0 to 1
-		AngelscriptTestBindings::ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
+		ExpectGlobalInt(*TestRunner, Engine, Mod.GetModule(), 
 			TEXT("int AbilitySpec_DefaultLevel()"), TEXT("Default ability spec level"), 1);
 	}
 };

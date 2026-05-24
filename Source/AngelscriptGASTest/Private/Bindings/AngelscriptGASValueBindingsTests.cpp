@@ -25,9 +25,6 @@
 
 #if WITH_DEV_AUTOMATION_TESTS
 
-using namespace AngelscriptTestSupport;
-using namespace AngelscriptTestBindings;
-using namespace AngelscriptReflectiveAccess;
 
 // ----------------------------------------------------------------------------
 // Profile
@@ -74,7 +71,7 @@ void TriggerNullEffectSpec()
 		if (!Mod.IsValid()) return;
 		auto& M = Mod.GetModule();
 
-		AngelscriptTestBindings::ExecuteFunctionExpectingScriptException(
+		ExecuteFunctionExpectingScriptException(
 			*TestRunner, Engine, M, 
 			TEXT("void TriggerNullEffectSpec()"),
 			TEXT("FGameplayEffectSpec null-def constructor should raise exception"),
