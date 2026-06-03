@@ -14,6 +14,7 @@ namespace UnrealBuildTool.Rules
 				"CoreUObject",
 				"Engine",
 				"AngelscriptRuntime",
+				"AngelscriptGameplayTags",
 				"GameplayAbilities",
 				"GameplayTags",
 				"GameplayTasks",
