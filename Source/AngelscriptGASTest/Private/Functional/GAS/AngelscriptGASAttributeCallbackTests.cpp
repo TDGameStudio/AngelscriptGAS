@@ -37,6 +37,27 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAttributeCallbackTests,
 		return ASC;
 	}
 
+	void RegisterLegacyCallbackForAttribute(
+		UAngelscriptAbilitySystemComponent* ASC,
+		TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass,
+		FName AttributeName)
+	{
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		ASC->RegisterCallbackForAttribute(AttributeSetClass, AttributeName);
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
+	}
+
+	void GetAndRegisterLegacyCallbackForAttribute(
+		UAngelscriptAbilitySystemComponent* ASC,
+		TSubclassOf<UAngelscriptAttributeSet> AttributeSetClass,
+		FName AttributeName,
+		float& OutCurrentValue)
+	{
+PRAGMA_DISABLE_DEPRECATION_WARNINGS
+		ASC->GetAndRegisterCallbackForAttribute(AttributeSetClass, AttributeName, OutCurrentValue);
+PRAGMA_ENABLE_DEPRECATION_WARNINGS
+	}
+
 	// Acquire-once / reset-once: see AngelscriptGASAttributeSetOverrideTests.cpp
 	// pilot for rationale (each TEST_METHOD uses unique module + class names and
 	// its own ON_SCOPE_EXIT { DiscardModule(...) } so the shared engine stays
@@ -81,7 +102,7 @@ class UTestTrampolineAttributes : UAngelscriptAttributeSet
 		ASC->RegisterAttributeSet(AttrSetSubclass);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Stamina"), 50.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Stamina"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Stamina"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -122,7 +143,7 @@ class UTestGetRegAttributes : UAngelscriptAttributeSet
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Mana"), 42.f);
 
 		float OutValue = 0.f;
-		ASC->GetAndRegisterCallbackForAttribute(AttrSetSubclass, TEXT("Mana"), OutValue);
+		GetAndRegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Mana"), OutValue);
 		TestRunner->TestEqual(
 			TEXT("GetAndRegisterCallbackForAttribute should return the current attribute value"),
 			OutValue, 42.f);
@@ -157,7 +178,7 @@ class UTestCallbackDataAttributes : UAngelscriptAttributeSet
 		ASC->RegisterAttributeSet(AttrSetSubclass);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Energy"), 20.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Energy"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Energy"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -203,8 +224,8 @@ class UTestNoDupAttributes : UAngelscriptAttributeSet
 		ASC->RegisterAttributeSet(AttrSetSubclass);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Armor"), 10.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Armor"));
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Armor"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Armor"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Armor"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -370,8 +391,8 @@ class UTestMultiCallbackAttributes : UAngelscriptAttributeSet
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Health"), 100.f);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Shield"), 50.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Health"));
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Shield"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Health"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Shield"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -417,7 +438,7 @@ class UTestUnchangedAttributes : UAngelscriptAttributeSet
 		ASC->RegisterAttributeSet(AttrSetSubclass);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Focus"), 60.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Focus"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Focus"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -463,7 +484,7 @@ class UTestGetRegBindAttributes : UAngelscriptAttributeSet
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Agility"), 10.f);
 
 		float OutValue = 0.f;
-		ASC->GetAndRegisterCallbackForAttribute(AttrSetSubclass, TEXT("Agility"), OutValue);
+		GetAndRegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Agility"), OutValue);
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
@@ -509,7 +530,7 @@ class UTestIndepAttributes : UAngelscriptAttributeSet
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Strength"), 10.f);
 		ASC->TrySetAttributeBaseValue(AttrSetSubclass, TEXT("Dexterity"), 20.f);
 
-		ASC->RegisterCallbackForAttribute(AttrSetSubclass, TEXT("Strength"));
+		RegisterLegacyCallbackForAttribute(ASC, AttrSetSubclass, TEXT("Strength"));
 
 		UAngelscriptGASTestDelegateCapture* Capture = NewObject<UAngelscriptGASTestDelegateCapture>(GetTransientPackage());
 		ASC->OnAttributeChanged.AddDynamic(Capture, &UAngelscriptGASTestDelegateCapture::HandleAttributeChanged);
