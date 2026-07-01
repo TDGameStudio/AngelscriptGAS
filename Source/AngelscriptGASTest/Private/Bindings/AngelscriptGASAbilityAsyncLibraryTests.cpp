@@ -19,7 +19,7 @@
 #include "GameplayTagsManager.h"
 #include "Misc/ScopeExit.h"
 
-#if WITH_DEV_AUTOMATION_TESTS
+#if WITH_ANGELSCRIPT_UNITTESTS
 
 
 namespace
@@ -138,4 +138,4 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityAsyncLibraryTests,
 	}
 };
 
-#endif // WITH_DEV_AUTOMATION_TESTS
+#endif // WITH_ANGELSCRIPT_UNITTESTS

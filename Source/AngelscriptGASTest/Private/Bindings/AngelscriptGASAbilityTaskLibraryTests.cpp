@@ -11,7 +11,7 @@
 #include "CQTest.h"
 #include "GameplayTagsManager.h"
 
-#if WITH_DEV_AUTOMATION_TESTS
+#if WITH_ANGELSCRIPT_UNITTESTS
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityTaskLibraryTests,
 	"Angelscript.GAS.Bindings.AbilityTaskLibrary",
@@ -132,4 +132,4 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASAbilityTaskLibraryTests,
 	}
 };
 
-#endif // WITH_DEV_AUTOMATION_TESTS
+#endif // WITH_ANGELSCRIPT_UNITTESTS

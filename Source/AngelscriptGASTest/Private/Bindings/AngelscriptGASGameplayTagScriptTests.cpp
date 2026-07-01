@@ -12,7 +12,7 @@
 #include "CQTest.h"
 #include "GameplayTagsManager.h"
 
-#if WITH_DEV_AUTOMATION_TESTS
+#if WITH_ANGELSCRIPT_UNITTESTS
 
 TEST_CLASS_WITH_FLAGS(FAngelscriptGASGameplayTagScriptTests,
 	"Angelscript.GAS.Bindings.GameplayTagOps",
@@ -225,4 +225,4 @@ TEST_CLASS_WITH_FLAGS(FAngelscriptGASGameplayTagScriptTests,
 	}
 };
 
-#endif // WITH_DEV_AUTOMATION_TESTS
+#endif // WITH_ANGELSCRIPT_UNITTESTS
